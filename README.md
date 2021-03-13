@@ -66,4 +66,4 @@ public class DependantFactoryClass {
 > Dependency `FactoryClass` will be injected to `DependantFactoryClass` will be injected through the `static` factory method `getInstance` by the framework since `FactoryClass` is marked as `@Dependency`.
 
 ## License
-[BSD 2-Clause "Simplified" License](https://opensource.org/licenses/bsd-license.html)
+[BSD 3-Clause "Revised" license](https://opensource.org/licenses/BSD-3-Clause)
