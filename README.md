@@ -1,2 +1,2 @@
 # sdf
-[S]imple [D]ependency [I]njection [F]ramework
+[S]imple [D]ependency Injection [F]ramework
