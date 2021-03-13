@@ -18,7 +18,7 @@
 ```
 
 ## Usage
-- Adding a class as Dependency using `@Dependency`
+- Instantiating a class as Dependency using `@Dependency` through constructor
 ```java
 @Dependency
 public class SimpleClass {
@@ -37,6 +37,33 @@ public class DependantClass {
 }
 ```
 > Dependency `SimpleClass` will be injected to `DependantClass` will be injected by the framework since `SimpleClass` is marked as `@Dependency`.
+- Instantiating a class as Dependency using `@Dependency` through factory method
+```java
+@Dependency(initMethod = "getInstance")
+public class FactoryClass {
+  private FactoryClass() {
+  }
+  public static FactoryClass getInstance() {
+    return new FactoryClass();
+  }
+  ...
+}
+```
+> In the above example, the `FactoryClass` is instantiated using the `getInstance` method. Please note that the factory method must be static.
+```java
+@Dependency(initMethod = "getInstance")
+public class DependantFactoryClass {
+  private final FactoryClass factoryClass;
+  private DependantFactoryClass(FactoryClass arg) {
+    this.factoryClass = arg;
+  }
+  public static DependantFactoryClass getInstance(FactoryClass arg) {
+    return new DependantFactoryClass(arg);
+  }
+  ...
+}
+```
+> Dependency `FactoryClass` will be injected to `DependantFactoryClass` will be injected through the `static` factory method `getInstance` by the framework since `FactoryClass` is marked as `@Dependency`.
 
 ## License
 [BSD 2-Clause "Simplified" License](https://opensource.org/licenses/bsd-license.html)
