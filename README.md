@@ -18,7 +18,7 @@
 ```
 
 ## Usage
-- Instantiating a class as Dependency using `@Dependency` through constructor
+- **Instantiating a class as Dependency using `@Dependency` through constructor**
 ```java
 @Dependency
 public class SimpleClass {
@@ -37,7 +37,7 @@ public class DependantClass {
 }
 ```
 > Dependency `SimpleClass` will be injected to `DependantClass` will be injected by the framework since `SimpleClass` is marked as `@Dependency`.
-- Instantiating a class as Dependency using `@Dependency` through factory method
+- __Instantiating a class as Dependency using `@Dependency` through factory method__
 ```java
 @Dependency(initMethod = "getInstance")
 public class FactoryClass {
