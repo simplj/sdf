@@ -28,6 +28,7 @@ Table of contents
     <version>0.4</version>
 </dependency>
 ```
+[Maven Repository](https://mvnrepository.com/artifact/com.simplj.di/sdf)
 
 ## Usage
 
@@ -38,7 +39,7 @@ public class SimpleClass {
   ...
 }
 ```
-> By adding the `@Dependency` to the class enables it to get loaded by the framework as singleton instance. If singleton behavior is not expected just modify the annotation to `@Dependency(singleton=false)`.
+> By adding the `@Dependency` to the class enables it to get loaded by the framework as singleton instance. 💡If singleton behavior is not expected just modify the annotation to `@Dependency(singleton=false)`.
 ```java
 @Dependency
 public class DependantClass {
@@ -49,7 +50,7 @@ public class DependantClass {
   ...
 }
 ```
-> Dependency `SimpleClass` will be injected to `DependantClass` will be injected by the framework since `SimpleClass` is marked as `@Dependency`.
+> Dependency `SimpleClass` will be injected to `DependantClass` by the framework since `SimpleClass` is marked as `@Dependency`.
 
 ### Instantiating a class as Dependency using `@Dependency` through factory method
 ```java
@@ -77,7 +78,7 @@ public class DependantFactoryClass {
   ...
 }
 ```
-> Dependency `FactoryClass` will be injected to `DependantFactoryClass` will be injected through the `static` factory method `getInstance` by the framework since `FactoryClass` is marked as `@Dependency`.
+> Dependency `FactoryClass` will be injected to `DependantFactoryClass` through the `static` factory method `getInstance` by the framework since `FactoryClass` is marked as `@Dependency`.
 
 ### Injecting a subclass for it's parent (Single Implementation)
 ```java
@@ -98,8 +99,8 @@ public class SomeService {
   }
 }
 ```
-> In the above example `DbAdapter` will be passed for the dependency `IAdapter` in `SomeService` as the interface has only one implementation and the implementation is marked as `@Dependency`. In case there are multiple dependencies then sdf will throw an `ambiguity error` at runtime. There are two ways to resolve this:
->  * using `isDefault` field: set `isDefault=true` in the `@Dependency` annotation for the implementation which can be considered default.
+> In the above example `DbAdapter` will be passed for the dependency `IAdapter` in `SomeService` as the interface has only one implementation and the same is marked as `@Dependency`. In case there are multiple dependencies then sdf will throw an `ambiguity error` at runtime. There are two ways to resolve this:
+>  * setting `isDefault=true` in the `@Dependency` annotation for the implementation which can be considered default.
 >  * assigning an `id` for the implementations and `@Bind`ing with specific id in parameter as desired.
 
 ### Injecting a subclass for it's parent (Multiple Implementations)
@@ -149,4 +150,4 @@ public class MultiHandler {
 > 💡_A future version of release will have the ability to inject all the available implementations of a class/interface using a `Collection<T>` type in parameter_.
 
 ## License
-[BSD 2-Clause "Simplified" License](https://opensource.org/licenses/bsd-license.html)
+[BSD 3-Clause "Revised" license](https://opensource.org/licenses/BSD-3-Clause)
