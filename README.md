@@ -14,8 +14,8 @@ Table of contents
    * [Usage](#usage)
       * [Instantiating a class as Dependency using `@Dependency` through constructor](#instantiating-a-class-as-dependency-using-dependency-through-constructor)
       * [Instantiating a class as Dependency using `@Dependency` through factory method](#instantiating-a-class-as-dependency-using-dependency-through-factory-method)
-      * [Injecting a subclass for it's parent (Singple Implementation)](#injecting-a-subclass-for-its-parent)
-      * [Injecting a subclass for it's parent (Multiple Implementations)](#injecting-a-subclass-for-its-parent)
+      * [Injecting a subclass for it's parent (Singple Implementation)](#injecting-a-subclass-for-its-parent-single-implementation)
+      * [Injecting a subclass for it's parent (Multiple Implementations)](#injecting-a-subclass-for-its-parent-multiple-implementations)
    * [License](#License)
 <!--te-->
 
@@ -31,7 +31,7 @@ Table of contents
 
 ## Usage
 
-#### Instantiating a class as Dependency using `@Dependency` through constructor
+### Instantiating a class as Dependency using `@Dependency` through constructor
 ```java
 @Dependency
 public class SimpleClass {
@@ -51,7 +51,7 @@ public class DependantClass {
 ```
 > Dependency `SimpleClass` will be injected to `DependantClass` will be injected by the framework since `SimpleClass` is marked as `@Dependency`.
 
-#### Instantiating a class as Dependency using `@Dependency` through factory method
+### Instantiating a class as Dependency using `@Dependency` through factory method
 ```java
 @Dependency(initMethod = "getInstance")
 public class FactoryClass {
@@ -79,7 +79,7 @@ public class DependantFactoryClass {
 ```
 > Dependency `FactoryClass` will be injected to `DependantFactoryClass` will be injected through the `static` factory method `getInstance` by the framework since `FactoryClass` is marked as `@Dependency`.
 
-#### Injecting a subclass for it's parent (Single Implementation)
+### Injecting a subclass for it's parent (Single Implementation)
 ```java
 public interface IAdapter {
   ...
@@ -102,7 +102,7 @@ public class SomeService {
 >  * using `isDefault` field: set `isDefault=true` in the `@Dependency` annotation for the implementation which can be considered default.
 >  * assigning an `id` for the implementations and `@Bind`ing with specific id in parameter as desired.
 
-#### Injecting a subclass for it's parent (Single Implementation)
+### Injecting a subclass for it's parent (Multiple Implementations)
 ```java
 public interface IAdapter {
   ...
