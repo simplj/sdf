@@ -10,11 +10,12 @@
 Table of contents
 =================
 <!--ts-->
-   * [Dependency](##dependency)
-   * [Usage](##usage)
-      * [Instantiating a class as Dependency using `@Dependency` through constructor](#stdin)
-      * [Instantiating a class as Dependency using `@Dependency` through factory method](#local-files)
-      * [Injecting a subclass for it's parent](#remote-files)
+   * [Dependency](#dependency)
+   * [Usage](#usage)
+      * [Instantiating a class as Dependency using `@Dependency` through constructor](#instantiating-a-class-as-dependency-using-dependency-through-constructor)
+      * [Instantiating a class as Dependency using `@Dependency` through factory method](#instantiating-a-class-as-dependency-using-dependency-through-factory-method)
+      * [Injecting a subclass for it's parent (Singple Implementation)](#injecting-a-subclass-for-its-parent)
+      * [Injecting a subclass for it's parent (Multiple Implementations)](#injecting-a-subclass-for-its-parent)
    * [License](#License)
 <!--te-->
 
@@ -78,7 +79,7 @@ public class DependantFactoryClass {
 ```
 > Dependency `FactoryClass` will be injected to `DependantFactoryClass` will be injected through the `static` factory method `getInstance` by the framework since `FactoryClass` is marked as `@Dependency`.
 
-#### Injecting a subclass for it's parent
+#### Injecting a subclass for it's parent (Single Implementation)
 ```java
 public interface IAdapter {
   ...
@@ -100,6 +101,8 @@ public class SomeService {
 > In the above example `DbAdapter` will be passed for the dependency `IAdapter` in `SomeService` as the interface has only one implementation and the implementation is marked as `@Dependency`. In case there are multiple dependencies then sdf will throw an `ambiguity error` at runtime. There are two ways to resolve this:
 >  * using `isDefault` field: set `isDefault=true` in the `@Dependency` annotation for the implementation which can be considered default.
 >  * assigning an `id` for the implementations and `@Bind`ing with specific id in parameter as desired.
+
+#### Injecting a subclass for it's parent (Single Implementation)
 ```java
 public interface IAdapter {
   ...
