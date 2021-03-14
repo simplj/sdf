@@ -19,7 +19,7 @@ Table of contents
       * [Injecting a subclass for it's parent (Multiple Implementations)](#injecting-a-subclass-for-its-parent-multiple-implementations)
       * [Providing Constants](#providing-constants)
          * [Using `@Constant` annotation](#using-constant-annotation)
-         * [Through `java.lang.Properties`](#through-java-lang-properties)
+         * [Through `java.lang.Properties`](#through-javalangproperties)
          * [Through JVM Argument](#through-jvm-argument)
    * [Constraints/Restrictions]()
    * [Suggestions/Feedbacks](https://github.com/simplj/sdf/discussions)
