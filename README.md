@@ -14,8 +14,16 @@ Table of contents
    * [Usage](#usage)
       * [Instantiating a class as Dependency using `@Dependency` through constructor](#instantiating-a-class-as-dependency-using-dependency-through-constructor)
       * [Instantiating a class as Dependency using `@Dependency` through factory method](#instantiating-a-class-as-dependency-using-dependency-through-factory-method)
+      * [Instantiating a class as Dependency using @DependencyProvider](#instantiating-a-class-as-dependency-using-dependencyprovider)
       * [Injecting a subclass for it's parent (Singple Implementation)](#injecting-a-subclass-for-its-parent-single-implementation)
       * [Injecting a subclass for it's parent (Multiple Implementations)](#injecting-a-subclass-for-its-parent-multiple-implementations)
+      * [Providing Constants](#providing-constants)
+         * [Using `@Constant` annotation](#using-constant-annotation)
+         * [Through `java.lang.Properties`](#through-java-lang-properties)
+         * [Through JVM Argument](#through-jvm-argument)
+   * [Constraints/Restrictions]()
+   * [Suggestions/Feedbacks](https://github.com/simplj/sdf/discussions)
+   * [Report an Issue](https://github.com/simplj/sdf/issues)
    * [License](#License)
 <!--te-->
 
@@ -64,7 +72,7 @@ public class FactoryClass {
   ...
 }
 ```
-> In the above example, the `FactoryClass` is instantiated using the `getInstance` method. Please note that the factory method must be static.
+> In the above example, the `FactoryClass` is instantiated using the `getInstance` method. **The factory method must be** `static`.
 ```java
 @Dependency(initMethod = "getInstance")
 public class DependantFactoryClass {
@@ -79,6 +87,38 @@ public class DependantFactoryClass {
 }
 ```
 > Dependency `FactoryClass` will be injected to `DependantFactoryClass` through the `static` factory method `getInstance` by the framework since `FactoryClass` is marked as `@Dependency`.
+
+### Instantiating a class as Dependency using @DependencyProvider
+Dependencies can also be provided in a separate class through a `static` method using `@DependencyProvider` annotation. **Classes from `java.lang` package cannot be used as a dependency**. 💡Check [Providing Constants](#providing-constants) section to see how to use `java.lang` classes as constants instead. Like `@Dependency`, `id`, `singleton` and `isDefault` fields can also be used in their respective purpose.
+```java
+public class HttpConnection {
+  ...
+}
+public class HttpClient {
+  private final HttpConnection httpConnection;
+  public HttpClient(HttpConnection arg) {
+    this.httpConnection = arg;
+  }
+  ...
+}
+~~~~~~~
+public class HttpDependencyProviders {
+  @DependencyProvider
+  public static getHttpConnection() {
+    return new HttpConnection();
+  }
+  @DependencyProvider
+  public static httpClient(HttpConnection conn) {
+    return new HttpClient(conn);
+  }
+  ...
+}
+```
+> In the above example `HttpConnection` will be instantiated first and the instance will be passed to `httpClient` method to instantiate `HttpClient`. Dependency provider method names can be anything (there is no rule for naming pattern to follow). This way of initialization can be helpful in following two ways:
+>  * Providing dependency for a class from external library which is not annotated with `@Dependency`.
+>  * Putting instantiation logic of all the classes in a single place.
+>
+> 💡_Please note that if a class is annotated with `@Dependency` and is also configured using `@DependencyProvider` OR if two or more methods annotated with `@DependencyProvider` return the same type, then sdf will throw an `ambiguity error`._
 
 ### Injecting a subclass for it's parent (Single Implementation)
 ```java
@@ -147,7 +187,33 @@ public class MultiHandler {
 >  * In `DbHandler`, `DbAdapter` will be injected since the `adapter` since it is marked as default implementation for `IAdapter` using `isDefault` field in `@Dependency` annotation. This can also be bound with it's id like it's done in `MultiHandler` example.
 >  * It is also possible to inject multiple implementations of `IAdapter` using specific id in `@Bind` annotation like how it's done in `MultiHandler` example.
 >
-> 💡 _A future version of release will have the ability to inject all the available implementations of a class/interface using a `Collection<T>` type in parameter_.
+> 💡_A future version of release will have the ability to inject all the available implementations of a class/interface using a `Collection<T>` type in parameter_.
+
+### Providing Constants
+Constant values can be provided against an id in following three ways:
+* ##### Using `@Constant` annotation
+```java
+public class DependencyProviders {
+  @Constant(id = "db.userName")
+  public static String env() {
+    return "admin";
+  }
+  @Constant(id = "db.backup.path")
+  public static String dbBackupPath(@Bind(id = "db.userName") String userName) {
+    return String.format("/apps/db/bkp/%s/bkp.sql", userName);
+  }
+  @DependencyProvider
+  public static DbBackupService(@Bind(id = "db.backup.path") String backupPath) {
+    return new DbBackService(backupPath);
+  }
+  ...
+}
+```
+> As you can see, a constant can be dependant on another constant or dependency as well. In the above example, constant with id 'db.userName' will be loaded first followed by constant 'db.backup.path' with value of 'db.userName' and at last DbBackupService will instantiated with value of 'db.backup.path'.
+* ##### Through `java.lang.Properties`
+  Constants can be provided through `java.lang.Properties` to sdf. The property key will be the id. Using this id the value can be bound to a parameter using the `@Bind` annotation.
+* #### Through JVM Argument
+   Constant values can also be provided through jvm argument with a prefix 'sdf_consts.'. For example, if a constant or a dependency expects a constant with id `env.name` then in jvm argument it must be provided as `-Dsdf_consts.env.name=<env_value>`
 
 ## License
 [BSD 3-Clause "Revised" license](https://opensource.org/licenses/BSD-3-Clause)
