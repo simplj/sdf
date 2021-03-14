@@ -147,7 +147,7 @@ public class MultiHandler {
 >  * In `DbHandler`, `DbAdapter` will be injected since the `adapter` since it is marked as default implementation for `IAdapter` using `isDefault` field in `@Dependency` annotation. This can also be bound with it's id like it's done in `MultiHandler` example.
 >  * It is also possible to inject multiple implementations of `IAdapter` using specific id in `@Bind` annotation like how it's done in `MultiHandler` example.
 >
-> 💡_A future version of release will have the ability to inject all the available implementations of a class/interface using a `Collection<T>` type in parameter_.
+> 💡 _A future version of release will have the ability to inject all the available implementations of a class/interface using a `Collection<T>` type in parameter_.
 
 ## License
 [BSD 3-Clause "Revised" license](https://opensource.org/licenses/BSD-3-Clause)
