@@ -10,7 +10,7 @@
 Table of contents
 =================
 <!--ts-->
-   * [Dependency](#dependency)
+   * [Maven Dependency](#maven-dependency)
    * [Usage](#usage)
       * [Instantiating a class as Dependency using `@Dependency`](#instantiating-a-class-as-dependency-using-dependency)
          * [Through constructor](through-constructor)
@@ -31,16 +31,16 @@ Table of contents
    * [License](#License)
 <!--te-->
 
-## Dependency
+## Maven Dependency
 
 ```
 <dependency>
     <groupId>com.simplj.di</groupId>
     <artifactId>sdf</artifactId>
-    <version>0.4</version>
+    <version>0.5</version>
 </dependency>
 ```
-[Maven Repository](https://mvnrepository.com/artifact/com.simplj.di/sdf)
+[Maven Repository](https://mvnrepository.com/artifact/com.simplj.di/sdf/latest)
 
 ## Usage
 
