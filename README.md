@@ -127,7 +127,7 @@ public class HttpDependencyProviders {
 >  * Providing dependency for a class from external library which is not annotated with `@Dependency`.
 >  * Putting instantiation logic of all the classes in a single place.
 >
-> 💡_Please note that if a class is annotated with `@Dependency` and is also configured using `@DependencyProvider` OR if two or more methods annotated with `@DependencyProvider` return the same type, then sdf will throw an `ambiguity error`._
+> 💡 _Please note that if a class is annotated with `@Dependency` and is also configured using `@DependencyProvider` OR if two or more methods annotated with `@DependencyProvider` return the same type, then sdf will throw an `ambiguity error`._
 
 ### Injecting a subclass for it's parent (Single Implementation)
 ```java
@@ -196,7 +196,7 @@ public class MultiHandler {
 >  * In `DbHandler`, `DbAdapter` will be injected since the `adapter` since it is marked as default implementation for `IAdapter` using `isDefault` field in `@Dependency` annotation. This can also be bound with it's id like it's done in `MultiHandler` example.
 >  * It is also possible to inject multiple implementations of `IAdapter` using specific id in `@Bind` annotation like how it's done in `MultiHandler` example.
 >
-> 💡_A future version of release will have the ability to inject all the available implementations of a class/interface using a `Collection<T>` type in parameter_.
+> 💡 _A future version of release will have the ability to inject all the available implementations of a class/interface using a `Collection<T>` type in parameter_.
 
 ### Providing Constants
 Constant values can be provided against an id in following three ways:
