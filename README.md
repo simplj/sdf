@@ -3,7 +3,7 @@
 * Simple
   > As simple as adding one single annotation in a class
 * Lightweight
-  > less then 50 kb of size
+  > less then 30 kb of size
 * Powerful
   > We hope you will agree on this after getting introduced with the framework
 
