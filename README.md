@@ -24,7 +24,7 @@ Table of contents
          * [Through JVM Argument](#through-jvm-argument)
       * [`@Bind` with variable id](bind-with-variable-id)
       * [Bootstrap (or Application entrypoint) Action](#bootstrap-or-application-entrypoint-action)
-      * [Resolving Dependencies](#resolving-dependencies)
+      * [Resolving Dependencies](#resolvingdependencies)
    * [Constraints/Restrictions](#constraints-restrictions)
    * [Suggestions/Feedback](https://github.com/simplj/sdf/discussions)
    * [Report an Issue](https://github.com/simplj/sdf/issues)
