@@ -261,11 +261,11 @@ String env = resolver.resolve("env.name", String.class);
 ```
 
 ## Constraints/Restrictions
-  * If a class is initiated thourgh constructor using `@Dependency`, then there must be one public constructor present in the class. If multiple constructor is needed to present, please initiated through [Factory Method](#through-factory-method).
+  * If a class is initiated thourgh constructor using `@Dependency`, then there must be one public constructor present in the class. If multiple constructor is needed to present, please initiate through [Factory Method](#through-factory-method).
   * If a class is initiated through a factory method using `@Dependency` or `@DependencyProvider` then the method must be declared `static`.
   * `java.lang` classes cannot be declared as dependency (using `@Dependency` or `@DependencyProvider`). Use them as [Constants](#providing-constants) if needed.
   * If a constant is provided through JVM argument, then it must be prefixed with `sdf_consts.`. example: `-Dsdf_consts.env.name=DEV` - using this in JVM argument will add a constant value 'DEV' against id 'env.name'.
-  * `DependencyResolver.setup()`(as described [here]()) must be called in bootstrap or application entry point to load the dependencies properly by the framework.
+  * `DependencyResolver.setup()`(as described [here](#bootstrap-or-application-entrypoint-action)) must be called in bootstrap or application entry point to load the dependencies properly by the framework.
   * If dependencies are provided using `@DependencyProvider`, then the class(es) containing the provider methods must be set to `DependencyResolver` using `setDependencyProviders()` method before invoking `setup()`.💡If no such provider methods exist, the then no need to use `setDependencyProviders()` at all.
   * If dependencies are set at class level using `@Dependency`, then base package(s) of the classes must be set to `DependencyResolver` using `setBasePackages()` method before invoking `setup()`.💡If dependencies are not set at class level, the then no need to use `setBasePackages()` at all.
 
