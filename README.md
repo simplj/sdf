@@ -54,7 +54,7 @@ public class SimpleClass {
   ...
 }
 ```
-> By adding the `@Dependency` to the class enables it to get loaded by the framework as singleton instance. 💡If singleton behavior is not expected just modify the annotation to `@Dependency(singleton=false)`. When `singleton` is set as `false` for a class, then, a new instance will be provided each time when needed.
+> By adding the `@Dependency` to the class enables it to get loaded by the framework as singleton instance. 💡If singleton behavior is not expected just modify the annotation to `@Dependency(singleton=false)`. When `singleton` is set as `false` for a class, then, a new and different instance will be provided for each time an instance of the class is needed (a class depends on this class or requesting for an instance manually using the [resolve](#resolving-dependencies) method).
 ```java
 package "complex.example.sdf.service"
 
