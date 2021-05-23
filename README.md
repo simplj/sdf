@@ -3,7 +3,7 @@
 * Simple
   > As simple as adding one single annotation in a class
 * Lightweight
-  > less then 30 kb of size
+  > less then 40 kb of size
 * Powerful
   > We hope you will agree on this after getting introduced with the framework
 
@@ -263,6 +263,7 @@ String env = resolver.resolve("env.name", String.class);
 ## Constraints/Restrictions
   * If a class is initiated thourgh constructor using `@Dependency`, then there must be one public constructor present in the class. If multiple constructor is needed to present, please initiate through [Factory Method](#through-factory-method).
   * If a class is initiated through a factory method using `@Dependency` or `@DependencyProvider` then the method must be declared `static`.
+  * `@Dependency` annotation cannot be used on Abstract class or interface. Only concrete classes can be marked as `@Dependency`.
   * `java.lang` classes cannot be declared as dependency (using `@Dependency` or `@DependencyProvider`). Use them as [Constants](#providing-constants) if needed.
   * If a constant is provided through JVM argument, then it must be prefixed with `sdf_consts.`. example: `-Dsdf_consts.env.name=DEV` - using this in JVM argument will add a constant value 'DEV' against id 'env.name'.
   * When using variable id in `@Bind`, it can only refer to constants of type `java.lang.String`.
