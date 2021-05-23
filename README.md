@@ -22,9 +22,10 @@ Table of contents
          * [Using `@Constant` annotation](#using-constant-annotation)
          * [Through `java.lang.Properties`](#through-javalangproperties)
          * [Through JVM Argument](#through-jvm-argument)
-      * [`@Bind` with variable id](bind-with-variable-id)
+      * [`@Bind` with variable id](#bind-with-variable-id)
       * [Bootstrap (or Application entrypoint) Action](#bootstrap-or-application-entrypoint-action)
       * [Resolving Dependencies](#resolving-dependencies)
+      * [Resolving dependencies with runtime provided parameters](#resolving-dependencies-with-runtime-provided-parameters)
    * [Constraints/Restrictions](#constraintsrestrictions)
    * [Suggestions/Feedback](https://github.com/simplj/sdf/discussions)
    * [Report an Issue](https://github.com/simplj/sdf/issues)
@@ -260,6 +261,32 @@ FileAdapter fileAdapter = resolver.resolve("fileAdapter", FileAdapter.class);
 String env = resolver.resolve("env.name", String.class);
 ```
 
+### Resolving dependencies with runtime provided parameters
+SDF supports resolving dependencies with parameters provided at the runtime. This helps initializing a class instance with different runtime values. The parameter which will be supplied at the runtime needs to be annotated with `@RtProvided` (i.e. short of _RuntimeProvided_) with an id. At the time of resolving the class, `dynamicResolve()` needs to be used with a map having the parameter value against the id as key.
+```java
+@Dependency
+public class UserAnalysisService {
+  private final IAdapter adapter;
+  private final User user;
+  
+  public UserService(IAdapter adapter, @RtProvided(id = "user") User user) {
+    this.adapter = adapter;
+    this.user = user;
+  }
+  
+  public void performAnalysis() {
+    ...
+  }
+}
+```
+In the above example, `UserAnalysisService` takes an `adapter` and an `user` instance which is provided at the runtime. Now to initialize, use `dynamicResolve()` with a map having the parameter value against the key "user".
+```java
+  User user = getUser(); //Logic to get the user from a runtime flow.
+  UserAnalysisService service = resolver.dynamicResolve(UserAnalysisService.class, Collections.singletonMap("user", user);
+```
+> 💡 _Class with `@RtProvided` parameters cannot be used as a dependency for another class_\
+> 💡 _Class with `@RtProvided` parameters cannot be used as a singleton (for obvious reason)_
+
 ## Constraints/Restrictions
   * If a class is initiated thourgh constructor using `@Dependency`, then there must be one public constructor present in the class. If multiple constructor is needed to present, please initiate through [Factory Method](#through-factory-method).
   * If a class is initiated through a factory method using `@Dependency` or `@DependencyProvider` then the method must be declared `static`.
@@ -270,6 +297,8 @@ String env = resolver.resolve("env.name", String.class);
   * `DependencyResolver.setup()`(as described [here](#bootstrap-or-application-entrypoint-action)) must be called in bootstrap or application entry point to load the dependencies properly by the framework.
   * If dependencies are provided using `@DependencyProvider`, then the class(es) containing the provider methods must be set to `DependencyResolver` using `setDependencyProviders()` method before invoking `setup()`.💡If no such provider methods exist, then no need to use `setDependencyProviders()` at all.
   * If dependencies are set at class level using `@Dependency`, then base package(s) of the classes must be set to `DependencyResolver` using `setBasePackages()` method before invoking `setup()`.💡If dependencies are not set at class level, then no need to use `setBasePackages()` at all.
+  * Class with `@RtProvided` parameters cannot be used as a dependency for another class.
+  * Class with `@RtProvided` parameters cannot be used as a singleton.
 
 ## License
 [BSD 3-Clause "Revised" license](https://opensource.org/licenses/BSD-3-Clause)
