@@ -5,7 +5,7 @@
 * Lightweight
   > A single independent jar of less then 40 kb of size (does not require any other dependency jars)
 * Powerful
-  > We hope you will agree on this after getting introduced with the framework
+  > Lets' get introduced to the framework to know it's capabilities
 
 Table of contents
 =================
@@ -25,6 +25,8 @@ Table of contents
       * [`@Bind` with variable id](#bind-with-variable-id)
       * [Bootstrap (or Application entrypoint) Action](#bootstrap-or-application-entrypoint-action)
       * [Resolving Dependencies](#resolving-dependencies)
+      * [Generic Type Dependencies](#generic-type-dependencies)
+      * [Subtypes Dependencies](#subtypes-dependencies)
       * [Resolving dependencies with runtime provided parameters](#resolving-dependencies-with-runtime-provided-parameters)
    * [Constraints/Restrictions](#constraintsrestrictions)
    * [Suggestions/Feedback](https://github.com/simplj/sdf/discussions)
@@ -196,8 +198,6 @@ public class MultiHandler {
 >  * In `FileHandler`, `FileAdapter` will be injected since the `adapter` parameter is bound to the id 'fileAdapter' using `@Bind` annotation.
 >  * In `DbHandler`, `DbAdapter` will be injected since the `adapter` since it is marked as default implementation for `IAdapter` using `isDefault` field in `@Dependency` annotation. This can also be bound with it's id like it's done in `MultiHandler` example.
 >  * It is also possible to inject multiple implementations of `IAdapter` using specific id in `@Bind` annotation like how it's done in `MultiHandler` example.
->
-> 💡 _A future version of release will have the ability to inject all the available implementations of a class/interface using a `Collection<T>` type in parameter_.
 
 ### Providing Constants
 Constant values can be provided against an id in following three ways:
@@ -261,6 +261,72 @@ FileAdapter fileAdapter = resolver.resolve("fileAdapter", FileAdapter.class);
 String env = resolver.resolve("env.name", String.class);
 ```
 
+### Generic Type Dependencies
+SDF resolves Dependencies with generic types. Consider the below example:
+```java
+class Carnivorous {}
+class Herbivorous {}
+
+abstract class Animal<T> {}
+
+@Dependency
+class Deer extends Animal<Herbivorous> {}
+@Dependency
+class Tiger extends Animal<Carnivorous> {
+  private Animal<Herbivorous> food;
+  public Tiger(Animal<Herbivorous> food) {
+    this.food = food;
+  }
+}
+```
+> In the above example, SDF will resolve dependencies (Deer and Tiger) and while initializing Tiger, instance of Deer will be passed in the constructor. If there is another dependency which extends type `Animal<Herbivorous>`, then the framework will complain about ambiguity.
+> To resolve instance of type `Animal<Herbivorous>` manually (using the `resolve` method), the type needs to be wrapped in `TypeClass`. Since, `Animal<Herbivoruos>.class` is not possible in java, the framework's `TypeClass<T>` helps wrapping the generic type. Below example shows how to resolve type `Animal<Herbivorous>` manually.
+```java
+TypeClass<Animal<Herbivorous>> herbivorousType = new TypeClass<Animal<Herbivorous>> {};
+Animal<Herbivorous> herbivorous = resolver.resolve(herbivorousType);
+```
+> 💡 _Generics with bounds and wildcards are not supported yet but is expected to be available with version 2.0 release._
+
+### Subtypes Dependencies
+There can be a situation where a class needs all the classes which are subtypes of class A (collection of instances that are subtype of A). SDF has the ability to inject all the available implementations of a class/interface as a `List<A>` or a `Map<String, A>` type. All is needed is to just mark the `List` or `Map` type in parameter with the annotation `@SubTypes`. Consider the below example:
+```java
+interface Notifier {}
+@Dependency
+class NotifierSerivceA implements Notifier
+@Dependency
+class NotifierSerivceB implements Notifier
+@Dependency
+class NotifierSerivceC implements Notifier
+
+@Dependency
+class EventPublisher {
+  private List<Notifier> notifiers;
+  public EventPublisher(@SubTypes List<Notifier> notifiers) {
+    this.notifiers = notifiers;
+  }
+}
+```
+> In the above example, `EventPublisher` expects all the implementations of interface `Notifier`. SDF will provide `NotifierServiceA`, `NotiferServiceB` and `NotifierServiceC` to the parameter `notifiers` in `EventPublisher` constructor as it is of type `List<Notifier>` and is marked with `@SubTypes`. Generics can also be applied on this. Consider the below extended example:
+```java
+interface Notifier<A> {}
+@Dependency
+class NotifierSerivceA implements Notifier<String>
+@Dependency
+class NotifierSerivceB implements Notifier<String>
+@Dependency
+class NotifierSerivceC implements Notifier<Integer>
+
+@Dependency
+class EventPublisher {
+  private List<Notifier<String>> notifiers;
+  public EventPublisher(@SubTypes List<Notifier<String>> notifiers) {
+    this.notifiers = notifiers;
+  }
+}
+```
+> In the above example, SDF will only provide `NotifierServiceA` and `NotiferServiceB` to the parameter `notifiers` in `EventPublisher` constructor as it expects subtypes of `Notifier<String>`.
+> 💡 _Currently, only `List` and `Map` types are supported for Subtypes._
+
 ### Resolving dependencies with runtime provided parameters
 SDF supports resolving dependencies with parameters provided at the runtime. This helps initializing a class instance with different runtime values. The parameter which will be supplied at the runtime needs to be annotated with `@RtProvided` (i.e. short of _RuntimeProvided_) with an id. At the time of resolving the class, `dynamicResolve()` needs to be used with a map having the parameter value against the id as key.
 ```java
@@ -297,6 +363,8 @@ In the above example, `UserAnalysisService` takes an `adapter` and an `user` ins
   * `DependencyResolver.setup()`(as described [here](#bootstrap-or-application-entrypoint-action)) must be called in bootstrap or application entry point to load the dependencies properly by the framework.
   * If dependencies are provided using `@DependencyProvider`, then the class(es) containing the provider methods must be set to `DependencyResolver` using `setDependencyProviders()` method before invoking `setup()`.💡If no such provider methods exist, then no need to use `setDependencyProviders()` at all.
   * If dependencies are set at class level using `@Dependency`, then base package(s) of the classes must be set to `DependencyResolver` using `setBasePackages()` method before invoking `setup()`.💡If dependencies are not set at class level, then no need to use `setBasePackages()` at all.
+  * Generics with bounds and wildcards are not supported yet.
+  * Only `List` and `Map` types are supported for Subtypes.
   * Class with `@RtProvided` parameters cannot be used as a dependency for another class.
   * Class with `@RtProvided` parameters cannot be used as a singleton.
 
