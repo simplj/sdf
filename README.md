@@ -27,7 +27,7 @@ Table of contents
       * [Resolving Dependencies](#resolving-dependencies)
       * [Generic Type Dependencies](#generic-type-dependencies)
       * [Subtypes Dependencies](#subtypes-dependencies)
-      * [Dynamic/Runtime Dependencies](#dynamic-runtime-dependencies)
+      * [Dynamic/Runtime Dependencies](#dynamicruntime-dependencies)
    * [Constraints/Restrictions](#constraintsrestrictions)
    * [Suggestions/Feedback](https://github.com/simplj/sdf/discussions)
    * [Report an Issue](https://github.com/simplj/sdf/issues)
