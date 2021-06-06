@@ -27,7 +27,7 @@ Table of contents
       * [Resolving Dependencies](#resolving-dependencies)
       * [Generic Type Dependencies](#generic-type-dependencies)
       * [Subtypes Dependencies](#subtypes-dependencies)
-      * [Resolving dependencies with runtime provided parameters](#resolving-dependencies-with-runtime-provided-parameters)
+      * [Dynamic/Runtime Dependencies](#dynamic-runtime-dependencies)
    * [Constraints/Restrictions](#constraintsrestrictions)
    * [Suggestions/Feedback](https://github.com/simplj/sdf/discussions)
    * [Report an Issue](https://github.com/simplj/sdf/issues)
@@ -327,7 +327,7 @@ class EventPublisher {
 > In the above example, SDF will only provide `NotifierServiceA` and `NotiferServiceB` to the parameter `notifiers` in `EventPublisher` constructor as it expects subtypes of `Notifier<String>`.
 > 💡 _Currently, only `List` and `Map` types are supported for Subtypes._
 
-### Resolving dependencies with runtime provided parameters
+### Dynamic/Runtime Dependencies
 SDF supports resolving dependencies with parameters provided at the runtime. This helps initializing a class instance with different runtime values. The parameter which will be supplied at the runtime needs to be annotated with `@RtProvided` (i.e. short of _RuntimeProvided_) with an id. At the time of resolving the class, `dynamicResolve()` needs to be used with a map having the parameter value against the id as key.
 ```java
 @Dependency
