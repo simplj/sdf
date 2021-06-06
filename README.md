@@ -40,7 +40,7 @@ Table of contents
 <dependency>
     <groupId>com.simplj.di</groupId>
     <artifactId>sdf</artifactId>
-    <version>0.9</version>
+    <version>1.0</version>
 </dependency>
 ```
 [Maven Repository](https://mvnrepository.com/artifact/com.simplj.di/sdf/latest)
