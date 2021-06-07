@@ -3,7 +3,7 @@
 * Simple
   > As simple as adding one single annotation in a class
 * Lightweight
-  > A single independent jar of less then 40 kb of size (does not require any other dependency jars)
+  > A single independent jar of less then 50 kb of size (does not require any other dependency jars)
 * Powerful
   > Lets' get introduced to the framework to know it's capabilities
 
@@ -196,7 +196,7 @@ public class MultiHandler {
 ```
 > In the above examples, `DbAdapter` is default and assigned an id 'dbAdapter' and `FileAdapter` is assigned an id 'fileAdapter' (and is not default).
 >  * In `FileHandler`, `FileAdapter` will be injected since the `adapter` parameter is bound to the id 'fileAdapter' using `@Bind` annotation.
->  * In `DbHandler`, `DbAdapter` will be injected since the `adapter` since it is marked as default implementation for `IAdapter` using `isDefault` field in `@Dependency` annotation. This can also be bound with it's id like it's done in `MultiHandler` example.
+>  * In `DbHandler`, `DbAdapter` will be injected since it is marked as default implementation for `IAdapter` using `isDefault` field in `@Dependency` annotation. This can also be bound with it's id like it's done in `MultiHandler` example.
 >  * It is also possible to inject multiple implementations of `IAdapter` using specific id in `@Bind` annotation like how it's done in `MultiHandler` example.
 
 ### Providing Constants
@@ -213,7 +213,7 @@ public class DependencyProviders {
     return String.format("/apps/db/bkp/%s/bkp.sql", userName);
   }
   @DependencyProvider
-  public static DbBackupService(@Bind(id = "db.backup.path") String backupPath) {
+  public static DbBackupService dbBackupService(@Bind(id = "db.backup.path") String backupPath) {
     return new DbBackService(backupPath);
   }
   ...
