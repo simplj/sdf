@@ -381,6 +381,7 @@ class EventPublisher {
 }
 ```
 > In the above example, SDF will only provide `NotifierServiceA` and `NotiferServiceB` to the parameter `notifiers` in `EventPublisher` constructor as it expects subtypes of `Notifier<String>`.
+> 
 > 💡 _Currently, only `List` and `Map` types are supported for Subtypes._
 
 ### Dynamic/Runtime Dependencies
