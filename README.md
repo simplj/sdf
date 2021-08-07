@@ -427,5 +427,5 @@ In the above example, `UserAnalysisService` takes an `adapter` and an `user` ins
 ## License
 [BSD 3-Clause "Revised" license](https://opensource.org/licenses/BSD-3-Clause)
 
-##Previous Versions
+## Previous Versions
   * [Version 1.0](https://github.com/simplj/sdf/tree/1.0)
