@@ -299,6 +299,7 @@ class Lion extends Animal<Carnivorous> {
 >  * `Upper Bound Wildcard` - Used in `Lion` class constructor in the above example
 >  * `Lower Bound Wildcard` - An instance of `Number` can be passed to `? super Integer`
 >  * `Upper Bound TypeVariable` - An instance of `Integer` can be passed to `T extends Number`.
+>  
 > To resolve instance of type `Animal<Herbivorous>` manually (using the `resolve` method), the type needs to be wrapped in `TypeClass`. Since, `Animal<Herbivoruos>.class` is not possible in java, the framework's `TypeClass<T>` helps wrapping the generic type. Below example shows how to resolve type `Animal<Herbivorous>` manually.
 ```java
 TypeClass<Animal<Herbivorous>> herbivorousType = new TypeClass<Animal<Herbivorous>> {};
@@ -340,6 +341,7 @@ public class DependencyProviders {
 }
 ```
 > I wonder if there is any school with one student only, but let's imagine there is for the sake of this documentation 😄
+> 
 > In the above example, `Child` instance will be provided to `sampleStudentSet` as it is bound with id. Because of this the type variable `T` in `sampleStudentSet` will be substituted to `Child` making the return type of `sampleStudentSet` to `Set<Child>`. And naturally, the return type `Set<Child>` will be provided to `someSchool` resulting our unique school with only one student 😄
 > 
 > 💡 _Naked type variables (in return type or in argument) is not allowed. TypeVariables must only be used either with `@Bind` or with `@RtProvided`._
