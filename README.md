@@ -38,7 +38,7 @@ Table of contents
 <!--te-->
 
 ## Maven Dependency
-
+[![Maven Central](https://img.shields.io/maven-central/v/com.simplj.di/sdf.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.simplj.di%22%20AND%20a:%22sdf%22)
 ```
 <dependency>
     <groupId>com.simplj.di</groupId>
