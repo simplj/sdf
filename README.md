@@ -3,7 +3,7 @@
 * Simple
   > As simple as adding one single annotation in a class
 * Lightweight
-  > A single independent jar of less then 50 kb of size (does not require any other dependency jars)
+  > A single independent jar of ~70 kb of size (does not require any other dependency jars)
 * Powerful
   > Lets' get introduced to the framework to know it's capabilities
 
@@ -26,12 +26,14 @@ Table of contents
       * [Bootstrap (or Application entrypoint) Action](#bootstrap-or-application-entrypoint-action)
       * [Resolving Dependencies](#resolving-dependencies)
       * [Generic Type Dependencies](#generic-type-dependencies)
+      * [Dependencies with TypeVariables](#dependencies-with-typevariables)
       * [Subtypes Dependencies](#subtypes-dependencies)
       * [Dynamic/Runtime Dependencies](#dynamicruntime-dependencies)
    * [Constraints/Restrictions](#constraintsrestrictions)
    * [Suggestions/Feedback](https://github.com/simplj/sdf/discussions)
    * [Report an Issue](https://github.com/simplj/sdf/issues)
    * [License](#License)
+   * [Previous Versions](#previous-versions)
 <!--te-->
 
 ## Maven Dependency
@@ -40,7 +42,7 @@ Table of contents
 <dependency>
     <groupId>com.simplj.di</groupId>
     <artifactId>sdf</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 </dependency>
 ```
 [Maven Repository](https://mvnrepository.com/artifact/com.simplj.di/sdf/latest)
@@ -101,7 +103,7 @@ public class DependantFactoryClass {
 > Dependency `FactoryClass` will be injected to `DependantFactoryClass` through the `static` factory method `getInstance` by the framework since `FactoryClass` is marked as `@Dependency`.
 
 ### Instantiating a class as Dependency using `@DependencyProvider`
-Dependencies can also be provided in a separate class through a `static` method using `@DependencyProvider` annotation. **Classes from `java.lang` package cannot be used as a dependency**. 💡Check [Providing Constants](#providing-constants) section to see how to use `java.lang` classes as constants instead. Like `@Dependency`, `id`, `singleton` and `isDefault` fields can also be used in their respective purpose.
+Dependencies can also be provided in a separate class through a `static` method using `@DependencyProvider` annotation. **Classes from `java.lang` package cannot be used as a dependency**. 💡Check [Providing Constants](#providing-constants) section to see how to use `java.lang` classes as constants instead. Like `@Dependency`, options `id`, `singleton` and `isDefault` can also be used for their respective purposes.
 ```java
 public class HttpConnection {
   ...
@@ -188,13 +190,13 @@ public class DbHandler {
 public class MultiHandler {
   private final IAdapter adapter1;
   private final IAdapter adapter2;
-  public FileHandler(@Bind(id = "dbAdapter") IAdapter a1, (@Bind(id = "fileAdapter") IAdapter a2) {
+  public FileHandler(@Bind(id = "dbAdapter") IAdapter a1, @Bind(id = "fileAdapter") IAdapter a2) {
     this.adapter1 = a1;
     this.adapter2 = a2;
   }
 }
 ```
-> In the above examples, `DbAdapter` is default and assigned an id 'dbAdapter' and `FileAdapter` is assigned an id 'fileAdapter' (and is not default).
+> In the above example, `DbAdapter` is default and assigned an id 'dbAdapter' and `FileAdapter` is assigned an id 'fileAdapter' (and is not default).
 >  * In `FileHandler`, `FileAdapter` will be injected since the `adapter` parameter is bound to the id 'fileAdapter' using `@Bind` annotation.
 >  * In `DbHandler`, `DbAdapter` will be injected since it is marked as default implementation for `IAdapter` using `isDefault` field in `@Dependency` annotation. This can also be bound with it's id like it's done in `MultiHandler` example.
 >  * It is also possible to inject multiple implementations of `IAdapter` using specific id in `@Bind` annotation like how it's done in `MultiHandler` example.
@@ -264,28 +266,82 @@ String env = resolver.resolve("env.name", String.class);
 ### Generic Type Dependencies
 SDF resolves Dependencies with generic types. Consider the below example:
 ```java
-class Carnivorous {}
-class Herbivorous {}
+interface FoodCategory {}
+class Carnivorous implements FoodCategory {}
+class Herbivorous implements FoodCategory {}
+class Omnivorous implements FoodCategory {}
 
 abstract class Animal<T> {}
 
 @Dependency
 class Deer extends Animal<Herbivorous> {}
 @Dependency
+class Boar extends Animal<Omnivorous> {}
+@Dependency
 class Tiger extends Animal<Carnivorous> {
   private Animal<Herbivorous> food;
   public Tiger(Animal<Herbivorous> food) {
     this.food = food;
   }
+@Dependency
+class Lion extends Animal<Carnivorous> {
+  private List<Animal<? extends FoodCategory>> food;
+  public Lion(@Subtypes List<Animal<? extends FoodCategory>> food) {
+    this.food = food;
+  }
 }
 ```
-> In the above example, SDF will resolve dependencies (Deer and Tiger) and while initializing Tiger, instance of Deer will be passed in the constructor. If there is another dependency which extends type `Animal<Herbivorous>`, then the framework will complain about ambiguity.
+> In the above example,
+  * while initializing Tiger, Deer instance will be passed to the constructor. If there is another dependency which extends type `Animal<Herbivorous>`, then the framework will complain about ambiguity.
+  * while initializing Lion, instances of Deer, Boar and Tiger will be passed to the constructor, since Lion is dependent on all [`@Subtypes`](#subtypes-dependencies) of type `Animal<? extends FoodCategory>`. SDF is intelligent enough to deduce type `? extends FoodCategory` to types `Carnivorous`, `Herbivorous` and `Omnivorous`, and similarly type `Animal<? extends FoodCategory>` is deduced to `Animal<Carnivorous>`, `Animal<Herbivorous>` and `Animal<Omnivorous>`. Hence all the instances of Dear, Boar and Tiger will be provided to Lion constructor. Also, to avoid `Circular Dependency`, SDF will not try to provide instance of Lion to the constructor of Lion iteself even though Lion is a `Animal<Carnivorous>`.
+> SDF supports generics with bounded types as well. For example:
+  * `Upper Bound Wildcard` - Used in `Lion` class constructor in the above example
+  * `Lower Bound Wildcard` - An instance of `Number` can be passed to `? super Integer`
+  * `Upper Bound TypeVariable` - An instance of `Integer` can be passed to `T extends Number`.
 > To resolve instance of type `Animal<Herbivorous>` manually (using the `resolve` method), the type needs to be wrapped in `TypeClass`. Since, `Animal<Herbivoruos>.class` is not possible in java, the framework's `TypeClass<T>` helps wrapping the generic type. Below example shows how to resolve type `Animal<Herbivorous>` manually.
 ```java
 TypeClass<Animal<Herbivorous>> herbivorousType = new TypeClass<Animal<Herbivorous>> {};
 Animal<Herbivorous> herbivorous = resolver.resolve(herbivorousType);
 ```
-> 💡 _Generics with bounds and wildcards are not supported yet but is expected to be available with version 2.0 release._
+
+### Dependencies with TypeVariables
+SDF supports using TypeVariables in dependencies as well but in a restrictive manner i.e. TypeVariables can only be used either with [`@Bind`](#bind-with-variable-id) or with [`@RtProvided`](#dynamicruntime-dependencies). (_The reason for this very obvious i.e. to void ambiguity for naked TypeVariables. What I mean is this - if a class is dependent on a type `T` and if there are N number of dependencies available in SDF, then all N instances can be provided to the `T` - resulting in ambiguity error._)
+Lets look at the following example
+```java
+public static class Student {}
+public static class Child extends Student {}
+public static class School<T extends Student> {
+    private final Set<T> students;
+
+    public School(Set<T> students) {
+        this.students = students;
+    }
+
+    public Set<T> getStudents() {
+        return students;
+    }
+}
+
+public class DependencyProviders {
+  @DependencyProvider(id = "child")
+  public static Child child() {
+    return new Child();
+  }
+  @DependencyProvider
+  public static <T> Set<T> sampleStudentSet(@Bind(id = "child") T value) {
+    return Collections.singleton(value);
+  }
+  @DependencyProvider
+  public static <T extends Student> School<T> someSchool(Set<T> students) {
+    return new School<>(students);
+  }
+  ...
+}
+```
+> I wonder if there is any school with one student only, but let's imagine there is for the sake of this documentation 😄
+> In the above example, `Child` instance will be provided to `sampleStudentSet` as it is bound with id. Because of this the type variable `T` in `sampleStudentSet` will be substituted to `Child` making the return type of `sampleStudentSet` to `Set<Child>`. And naturally, the return type `Set<Child>` will be provided to `someSchool` resulting our unique school with only one student 😄
+> 
+> 💡 _Naked type variables (in return type or in argument) is not allowed. TypeVariables must only be used either with `@Bind` or with `@RtProvided`._
 
 ### Subtypes Dependencies
 There can be a situation where a class needs all the classes which are subtypes of class A (collection of instances that are subtype of A). SDF has the ability to inject all the available implementations of a class/interface as a `List<A>` or a `Map<String, A>` type. All is needed is to just mark the `List` or `Map` type in parameter with the annotation `@SubTypes`. Consider the below example:
@@ -363,10 +419,13 @@ In the above example, `UserAnalysisService` takes an `adapter` and an `user` ins
   * `DependencyResolver.setup()`(as described [here](#bootstrap-or-application-entrypoint-action)) must be called in bootstrap or application entry point to load the dependencies properly by the framework.
   * If dependencies are provided using `@DependencyProvider`, then the class(es) containing the provider methods must be set to `DependencyResolver` using `setDependencyProviders()` method before invoking `setup()`.💡If no such provider methods exist, then no need to use `setDependencyProviders()` at all.
   * If dependencies are set at class level using `@Dependency`, then base package(s) of the classes must be set to `DependencyResolver` using `setBasePackages()` method before invoking `setup()`.💡If dependencies are not set at class level, then no need to use `setBasePackages()` at all.
-  * Generics with bounds and wildcards are not supported yet.
+  * Naked type variables (in return type or in argument) is not allowed. TypeVariables must only be used either with `@Bind` or with `@RtProvided`..
   * Only `List` and `Map` types are supported for Subtypes.
   * Class with `@RtProvided` parameters cannot be used as a dependency for another class.
   * Class with `@RtProvided` parameters cannot be used as a singleton.
 
 ## License
 [BSD 3-Clause "Revised" license](https://opensource.org/licenses/BSD-3-Clause)
+
+##Previous Versions
+  * [Version 1.0](https://github.com/simplj/sdf/tree/1.0)
