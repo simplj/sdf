@@ -292,12 +292,13 @@ class Lion extends Animal<Carnivorous> {
 }
 ```
 > In the above example,
-  * while initializing Tiger, Deer instance will be passed to the constructor. If there is another dependency which extends type `Animal<Herbivorous>`, then the framework will complain about ambiguity.
-  * while initializing Lion, instances of Deer, Boar and Tiger will be passed to the constructor, since Lion is dependent on all [`@Subtypes`](#subtypes-dependencies) of type `Animal<? extends FoodCategory>`. SDF is intelligent enough to deduce type `? extends FoodCategory` to types `Carnivorous`, `Herbivorous` and `Omnivorous`, and similarly type `Animal<? extends FoodCategory>` is deduced to `Animal<Carnivorous>`, `Animal<Herbivorous>` and `Animal<Omnivorous>`. Hence all the instances of Dear, Boar and Tiger will be provided to Lion constructor. Also, to avoid `Circular Dependency`, SDF will not try to provide instance of Lion to the constructor of Lion iteself even though Lion is a `Animal<Carnivorous>`.
+>  * while initializing Tiger, Deer instance will be passed to the constructor. If there is another dependency which extends type `Animal<Herbivorous>`, then the framework will complain about ambiguity.
+>  * while initializing Lion, instances of Deer, Boar and Tiger will be passed to the constructor, since Lion is dependent on all [`@Subtypes`](#subtypes-dependencies) of type `Animal<? extends FoodCategory>`. SDF is intelligent enough to deduce type `? extends FoodCategory` to types `Carnivorous`, `Herbivorous` and `Omnivorous`, and similarly type `Animal<? extends FoodCategory>` is deduced to `Animal<Carnivorous>`, `Animal<Herbivorous>` and `Animal<Omnivorous>`. Hence all the instances of Dear, Boar and Tiger will be provided to Lion constructor. Also, to avoid `Circular Dependency`, SDF will not try to provide instance of Lion to the constructor of Lion iteself even though Lion is a `Animal<Carnivorous>`.
+>  
 > SDF supports generics with bounded types as well. For example:
-  * `Upper Bound Wildcard` - Used in `Lion` class constructor in the above example
-  * `Lower Bound Wildcard` - An instance of `Number` can be passed to `? super Integer`
-  * `Upper Bound TypeVariable` - An instance of `Integer` can be passed to `T extends Number`.
+>  * `Upper Bound Wildcard` - Used in `Lion` class constructor in the above example
+>  * `Lower Bound Wildcard` - An instance of `Number` can be passed to `? super Integer`
+>  * `Upper Bound TypeVariable` - An instance of `Integer` can be passed to `T extends Number`.
 > To resolve instance of type `Animal<Herbivorous>` manually (using the `resolve` method), the type needs to be wrapped in `TypeClass`. Since, `Animal<Herbivoruos>.class` is not possible in java, the framework's `TypeClass<T>` helps wrapping the generic type. Below example shows how to resolve type `Animal<Herbivorous>` manually.
 ```java
 TypeClass<Animal<Herbivorous>> herbivorousType = new TypeClass<Animal<Herbivorous>> {};
