@@ -43,7 +43,7 @@ Table of contents
 <dependency>
     <groupId>com.simplj.di</groupId>
     <artifactId>sdf</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
 </dependency>
 ```
 [Maven Repository](https://mvnrepository.com/artifact/com.simplj.di/sdf/latest)
