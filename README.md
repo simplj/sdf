@@ -308,7 +308,7 @@ Animal<Herbivorous> herbivorous = resolver.resolve(herbivorousType);
 ```
 
 ### Dependencies with TypeVariables
-SDF supports using TypeVariables in dependencies as well but in a restrictive manner i.e. TypeVariables can only be used either with [`@Bind`](#bind-with-variable-id) or with [`@RtProvided`](#dynamicruntime-dependencies). (_The reason for this very obvious i.e. to void ambiguity for naked TypeVariables. What I mean is this - if a class is dependent on a type `T` and if there are N number of dependencies available in SDF, then all N instances can be provided to the `T` - resulting in ambiguity error._)
+SDF supports using TypeVariables in dependencies as well but in a restrictive manner i.e. TypeVariables can only be used either with [`@Bind`](#bind-with-variable-id) or with [`@RuntimeProvided`](#dynamicruntime-dependencies). (_The reason for this very obvious i.e. to void ambiguity for naked TypeVariables. What I mean is this - if a class is dependent on a type `T` and if there are N number of dependencies available in SDF, then all N instances can be provided to the `T` - resulting in ambiguity error._)
 Lets look at the following example
 ```java
 public static class Student {}
@@ -345,7 +345,7 @@ public class DependencyProviders {
 > 
 > In the above example, `Child` instance will be provided to `sampleStudentSet` as it is bound with id. Because of this the type variable `T` in `sampleStudentSet` will be substituted to `Child` making the return type of `sampleStudentSet` to `Set<Child>`. And naturally, the return type `Set<Child>` will be provided to `someSchool` resulting our unique school with only one student 😄
 > 
-> 💡 _Naked type variables (in return type or in argument) is not allowed. TypeVariables must only be used either with `@Bind` or with `@RtProvided`._
+> 💡 _Naked type variables (in return type or in argument) is not allowed. TypeVariables must only be used either with `@Bind` or with `@RuntimeProvided`._
 
 ### Subtypes Dependencies
 There can be a situation where a class needs all the classes which are subtypes of class A (collection of instances that are subtype of A). SDF has the ability to inject all the available implementations of a class/interface as a `List<A>` or a `Map<String, A>` type. All is needed is to just mark the `List` or `Map` type in parameter with the annotation `@SubTypes`. Consider the below example:
@@ -389,14 +389,14 @@ class EventPublisher {
 > 💡 _Currently, only `List` and `Map` types are supported for Subtypes._
 
 ### Dynamic/Runtime Dependencies
-SDF supports resolving dependencies with parameters provided at the runtime. This helps initializing a class instance with different runtime values. The parameter which will be supplied at the runtime needs to be annotated with `@RtProvided` (i.e. short of _RuntimeProvided_) with an id. At the time of resolving the class, `dynamicResolve()` needs to be used with a map having the parameter value against the id as key.
+SDF supports resolving dependencies with parameters provided at the runtime. This helps initializing a class instance with different runtime values. The parameter which will be supplied at the runtime needs to be annotated with `@RuntimeProvided` (i.e. short of _RuntimeProvided_) with an id. At the time of resolving the class, `dynamicResolve()` needs to be used with a map having the parameter value against the id as key.
 ```java
 @Dependency
 public class UserAnalysisService {
   private final IAdapter adapter;
   private final User user;
   
-  public UserService(IAdapter adapter, @RtProvided(id = "user") User user) {
+  public UserService(IAdapter adapter, @RuntimeProvided(id = "user") User user) {
     this.adapter = adapter;
     this.user = user;
   }
@@ -411,8 +411,8 @@ In the above example, `UserAnalysisService` takes an `adapter` and an `user` ins
   User user = getUser(); //Logic to get the user from a runtime flow.
   UserAnalysisService service = resolver.dynamicResolve(UserAnalysisService.class, Collections.singletonMap("user", user);
 ```
-> 💡 _Class with `@RtProvided` parameters cannot be used as a dependency for another class_\
-> 💡 _Class with `@RtProvided` parameters cannot be used as a singleton (for obvious reason)_
+> 💡 _Class with `@RuntimeProvided` parameters cannot be used as a dependency for another class_\
+> 💡 _Class with `@RuntimeProvided` parameters cannot be used as a singleton (for obvious reason)_
 
 ## Type Substitutions
 SDF substitutes types in a more generalized way. For example, type `List<Integer>` can be provided to a dependency type `List<Number>` since `Integer` is a subtype of `Number` and `Integer` can be set to `Number`. Please see below few more examples of substitutions which SDF supports.
@@ -454,10 +454,10 @@ SDF substitutes types in a more generalized way. For example, type `List<Integer
   * `DependencyResolver.setup()`(as described [here](#bootstrap-or-application-entrypoint-action)) must be called in bootstrap or application entry point to load the dependencies properly by the framework.
   * If dependencies are provided using `@DependencyProvider`, then the class(es) containing the provider methods must be set to `DependencyResolver` using `setDependencyProviders()` method before invoking `setup()`.💡If no such provider methods exist, then no need to use `setDependencyProviders()` at all.
   * If dependencies are set at class level using `@Dependency`, then base package(s) of the classes must be set to `DependencyResolver` using `setBasePackages()` method before invoking `setup()`.💡If dependencies are not set at class level, then no need to use `setBasePackages()` at all.
-  * Naked type variables (in return type or in argument) is not allowed. TypeVariables must only be used either with `@Bind` or with `@RtProvided`..
+  * Naked type variables (in return type or in argument) is not allowed. TypeVariables must only be used either with `@Bind` or with `@RuntimeProvided`..
   * Only `List` and `Map` types are supported for Subtypes.
-  * Class with `@RtProvided` parameters cannot be used as a dependency for another class.
-  * Class with `@RtProvided` parameters cannot be used as a singleton.
+  * Class with `@RuntimeProvided` parameters cannot be used as a dependency for another class.
+  * Class with `@RuntimeProvided` parameters cannot be used as a singleton.
 
 ## License
 [BSD 3-Clause "Revised" license](https://opensource.org/licenses/BSD-3-Clause)
