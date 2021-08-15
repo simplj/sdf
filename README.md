@@ -417,32 +417,32 @@ In the above example, `UserAnalysisService` takes an `adapter` and an `user` ins
 ## Type Substitutions
 SDF substitutes types in a more generalized way. For example, type `List<Integer>` can be provided to a dependency type `List<Number>` since `Integer` is a subtype of `Number` and `Integer` can be set to `Number`. Please see below few more examples of substitutions which SDF supports.
 | From Type                       | To Type                         | Assignable | Reason |
-| ------------------------------- | ------------------------------- | ---------- | ------ |
-| `Map<String,? extends Integer>` | `Map<String,? extends Integer>` |     ✅     |        |
-| `Map<String,? extends Integer>` | `Map<String,Integer>`           |     ✅     |        |
-| `Map<String,? extends Integer>` | `Map<String,? extends Number>`  |     ✅     |        |
-| `Map<String,? extends Integer>` | `Map<String,Number>`            |     ✅     |        |
-| `Map<String,? extends Integer>` | `Map`                           |     ✅     |        |
-| `Map<String,Integer>`           | `Map<String,? extends Integer>` |     ✅     |        |
-| `Map<String,Integer>`           | `Map<String,Integer>`           |     ✅     |        |
-| `Map<String,Integer>`           | `Map<String,? extends Number>`  |     ✅     |        |
-| `Map<String,Integer>`           | `Map<String,Number>`            |     ✅     |        |
-| `Map<String,Integer>`           | `Map`                           |     ✅     |        |
-| `Map<String,? extends Number>`  | `Map<String,? extends Integer>` |     ❌     | `? extends Number` cannot be set to `? extends Integer` |
-| `Map<String,? extends Number>`  | `Map<String,Integer>`           |     ❌     | `? extends Number` cannot be set to `Integer`           |
-| `Map<String,? extends Number>`  | `Map<String,? extends Number>`  |     ✅     |        |
-| `Map<String,? extends Number>`  | `Map<String,Number>`            |     ✅     |        |
-| `Map<String,? extends Number>`  | `Map`                           |     ✅     |        |
-| `Map<String,Number>`            | `Map<String,? extends Integer>` |     ❌     | `Number` cannot be set to `? extends Integer`           |
-| `Map<String,Number>`            | `Map<String,Integer>`           |     ❌     | `Number` cannot be set to `Integer`                     |
-| `Map<String,Number>`            | `Map<String,? extends Number>`  |     ✅     |        |
-| `Map<String,Number>`            | `Map<String,Number>`            |     ✅     |        |
-| `Map<String,Number>`            | `Map`                           |     ✅     |        |
-| `Map`                           | `Map<String,? extends Integer>` |     ❌     | `Map` w/o any type means `Map<Object, Object>` and `Object` cannot be set to `String` or `? extends Integer>` |
-| `Map`                           | `Map<String,Integer>`           |     ❌     |        |
-| `Map`                           | `Map<String,? extends Number>`  |     ❌     |        |
-| `Map`                           | `Map<String,Number>`            |     ❌     |        |
-| `Map`                           | `Map`                           |     ✅     |        |
+| ----------------------------- | ----------------------------- | ---------- | ------ |
+| Map<String,? extends Integer> | Map<String,? extends Integer> |     ✅     |        |
+| Map<String,? extends Integer> | Map<String,Integer>           |     ✅     |        |
+| Map<String,? extends Integer> | Map<String,? extends Number>  |     ✅     |        |
+| Map<String,? extends Integer> | Map<String,Number>            |     ✅     |        |
+| Map<String,? extends Integer> | Map                           |     ✅     |        |
+| Map<String,Integer>           | Map<String,? extends Integer> |     ✅     |        |
+| Map<String,Integer>           | Map<String,Integer>           |     ✅     |        |
+| Map<String,Integer>           | Map<String,? extends Number>  |     ✅     |        |
+| Map<String,Integer>           | Map<String,Number>            |     ✅     |        |
+| Map<String,Integer>           | Map                           |     ✅     |        |
+| Map<String,? extends Number>  | Map<String,? extends Integer> |     ❌     | `? extends Number` cannot be set to `? extends Integer` |
+| Map<String,? extends Number>  | Map<String,Integer>           |     ❌     | `? extends Number` cannot be set to `Integer`           |
+| Map<String,? extends Number>  | Map<String,? extends Number>  |     ✅     |        |
+| Map<String,? extends Number>  | Map<String,Number>            |     ✅     |        |
+| Map<String,? extends Number>  | Map                           |     ✅     |        |
+| Map<String,Number>            | Map<String,? extends Integer> |     ❌     | `Number` cannot be set to `? extends Integer`           |
+| Map<String,Number>            | Map<String,Integer>           |     ❌     | `Number` cannot be set to `Integer`                     |
+| Map<String,Number>            | Map<String,? extends Number>  |     ✅     |        |
+| Map<String,Number>            | Map<String,Number>            |     ✅     |        |
+| Map<String,Number>            | Map                           |     ✅     |        |
+| Map                           | Map<String,? extends Integer> |     ❌     | `Map` w/o any type means `Map<Object, Object>` and `Object` cannot be set to `String` or `? extends Integer>` |
+| Map                           | Map<String,Integer>           |     ❌     |        |
+| Map                           | Map<String,? extends Number>  |     ❌     |        |
+| Map                           | Map<String,Number>            |     ❌     |        |
+| Map                           | Map                           |     ✅     |        |
 
 ## Constraints/Restrictions
   * If a class is initiated thourgh constructor using `@Dependency`, then there must be one public constructor present in the class. If multiple constructor is needed to present, please initiate through [Factory Method](#through-factory-method).
