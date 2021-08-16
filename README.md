@@ -3,7 +3,7 @@
 * Simple
   > As simple as adding one single annotation in a class
 * Lightweight
-  > A single independent jar of ~70 kb of size (does not require any other dependency jars)
+  > A single independent jar of ~90 kb of size (does not require any other dependency jars)
 * Powerful
   > Lets' get introduced to the framework to know it's capabilities
 
