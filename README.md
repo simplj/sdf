@@ -3,7 +3,7 @@
 * Simple
   > As simple as adding one single annotation in a class
 * Lightweight
-  > A single independent jar with no other dependency
+  > A single and independent jar with no other dependency
 * Powerful
   > Let's get introduced to the framework to know it's capabilities
 
