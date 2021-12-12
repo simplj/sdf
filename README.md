@@ -223,7 +223,7 @@ public class DependencyProviders {
   ...
 }
 ```
-> As you can see, a constant can be dependant on another constant or dependency as well. In the above example, constant with id 'db.userName' will be loaded first followed by constant 'db.backup.path' with value of 'db.userName' and at last DbBackupService will instantiated with value of 'db.backup.path'.
+> As it can seen, a constant can be dependant on another constant or dependency as well. In the above example, constant with id 'db.userName' will be loaded first followed by constant 'db.backup.path' with value of 'db.userName' and at last DbBackupService will instantiated with value of 'db.backup.path'.
 * ##### Through `java.lang.Properties`
   Constants can be provided through `java.lang.Properties` to sdf. The property key will be the id. Using this id the value can be bound to a parameter using the `@Bind` annotation.
 * ##### Through JVM Argument
@@ -244,8 +244,8 @@ public class SomeService {
 
 ### Resolving Dependencies
 
-`DependencyResolver` class is used to resolve dependencies in an application and this class can be get through some factory configuration. Dependency classes (if set up at class level using `@Dependency` annotation) and the dependency provider class(es) containing all the `@DependencyProvider` or `@Constant` annotated methods (if exists) needs to be provided in the configuration to factory class (default or context based - discussed in detail [here](#contextual-dependency-resolver)). Then the (default or contextual according to factory configuration) resolver class for the framework `DependencyResolver` can be get from the factory class.
-💡 _`DependencyResolver` must be confiured in factory (default or contextual) before accessing resolver class from factory class_
+`DependencyResolver` class is used to resolve dependencies in an application and this class can be get through some factory configuration. Dependency classes (if set up at class level using `@Dependency` annotation) and the dependency provider class(es) containing all the `@DependencyProvider` or `@Constant` annotated methods (if exists) needs to be provided in the configuration to factory class (default or context based - discussed in detail [here](#contextual-dependency-resolver)). Then the (default or contextual according to factory configuration) resolver class `DependencyResolver` can be get from the factory.
+💡 _`DependencyResolver` must be confiured in factory (default or contextual) before accessing resolver class from the factory_
 ```java
 Properties props = new Properties(); //Do the actual coding to load properties from file or elsewhere.
 DependencyResolverFactory.configureDefaultResolver(DependencyResolverConfig.builder()
