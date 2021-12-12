@@ -3,14 +3,24 @@
 * Simple
   > As simple as adding one single annotation in a class
 * Lightweight
-  > A single independent jar of ~90 kb of size (does not require any other dependency jars)
+  > A single independent jar with no other dependency
 * Powerful
   > Lets' get introduced to the framework to know it's capabilities
+
+## Maven Dependency
+[![Maven Central](https://img.shields.io/maven-central/v/com.simplj.di/sdf.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.simplj.di%22%20AND%20a:%22sdf%22)
+```
+<dependency>
+    <groupId>com.simplj.di</groupId>
+    <artifactId>sdf</artifactId>
+    <version>1.3</version>
+</dependency>
+```
+[Mvn Repository](https://mvnrepository.com/artifact/com.simplj.di/sdf/latest)
 
 Table of contents
 =================
 <!--ts-->
-   * [Maven Dependency](#maven-dependency)
    * [Usage](#usage)
       * [Instantiating a class as Dependency using `@Dependency`](#instantiating-a-class-as-dependency-using-dependency)
          * [Through constructor](through-constructor)
@@ -23,12 +33,14 @@ Table of contents
          * [Through `java.lang.Properties`](#through-javalangproperties)
          * [Through JVM Argument](#through-jvm-argument)
       * [`@Bind` with variable id](#bind-with-variable-id)
-      * [Bootstrap (or Application entrypoint) Action](#bootstrap-or-application-entrypoint-action)
       * [Resolving Dependencies](#resolving-dependencies)
       * [Generic Type Dependencies](#generic-type-dependencies)
       * [Dependencies with TypeVariables](#dependencies-with-typevariables)
       * [Subtypes Dependencies](#subtypes-dependencies)
       * [Dynamic/Runtime Dependencies](#dynamicruntime-dependencies)
+      * [Tagged Dependencies](#tagged-dependencies)
+      * [Profile Based Dependency Resolution](#profile-based-dependency-resolution)
+      * [Contextual Dependency Resolver](#contextual-dependency-resolver)
    * [Type Substitutions](#type-substitutions)
    * [Constraints/Restrictions](#constraintsrestrictions)
    * [Suggestions/Feedback](https://github.com/simplj/sdf/discussions)
@@ -36,17 +48,6 @@ Table of contents
    * [License](#License)
    * [Previous Versions](#previous-versions)
 <!--te-->
-
-## Maven Dependency
-[![Maven Central](https://img.shields.io/maven-central/v/com.simplj.di/sdf.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.simplj.di%22%20AND%20a:%22sdf%22)
-```
-<dependency>
-    <groupId>com.simplj.di</groupId>
-    <artifactId>sdf</artifactId>
-    <version>1.2</version>
-</dependency>
-```
-[Maven Repository](https://mvnrepository.com/artifact/com.simplj.di/sdf/latest)
 
 ## Usage
 
@@ -241,21 +242,18 @@ public class SomeService {
 ```
 > In the above example if value of `target.example` is set as 'fileAdapter' (through [constants](#providing-constants)) then the [FileAdapter](#injecting-a-subclass-for-its-parent-multiple-implementations) class will be injected and if the value is set as 'dbAdapter' then the [DbAdapter](#injecting-a-subclass-for-its-parent-multiple-implementations) class will be injected.
 
-### Bootstrap (or Application entrypoint) Action
-In the bootstrap or application entrypoint (our very known `main` method), base package(s) of the dependency classes (if set up at class level using `@Dependency` annotation) and the dependency provider class(es) containing all the `@DependencyProvider` or `@Constant` annotated methods (if exists) must be provided to a class (the main class for the framework) called `DependencyResolver` and `setup` called in order to enable framework initialize and resolve dependencies properly.
+### Resolving Dependencies
+
+`DependencyResolver` class is used to resolve dependencies in an application and this class can be get through some factory configuration. Dependency classes (if set up at class level using `@Dependency` annotation) and the dependency provider class(es) containing all the `@DependencyProvider` or `@Constant` annotated methods (if exists) needs to be provided in the configuration to factory class (default or context based - discussed in detail [here](#contextual-dependency-resolver)). Then the (default or contextual according to factory configuration) resolver class for the framework `DependencyResolver` can be get from the factory class.
+💡 _`DependencyResolver` must be confiured in factory (default or contextual) before accessing resolver class from factory class_
 ```java
 Properties props = new Properties(); //Do the actual coding to load properties from file or elsewhere.
-DependencyResolver.getInstance()
+DependencyResolverFactory.configureDefaultResolver(DependencyResolverConfig.builder()
   .setProperties(props) //Not required if constants through properties is not needed
   .setDependencyProviders(HttpDependencyProviders.class, DependencyProviders.class) //Not required if not such classes exists
   .setBasePackages("simple.example.sdf.service", "complex.example.sdf.service") //Not required if dependency not set at class level
-  .setup(); //This is mandatory for the framework to initialize
-```
-
-### Resolving Dependencies
-`resolve` methods in `DependencyResolver` are used to resolve a dependency that is loaded through the framework (marked with `@Dependency` or `@DependencyProvider`). `DependencyResolver` must be initialized via `setup()` method before resolving dependencies.
-```java
-DependencyResolver resolver = DependencyResolver.getInstance();
+  .build());
+DependencyResolver resolver = DependencyResolverFactory.defaultResolver();
 SimpleClass simpleClass = resolver.resolve(SimpleClass.class);
 IAdapter adapter = resolver.resolve("dbAdapter", IAdapter.class);
 //or
@@ -414,6 +412,15 @@ In the above example, `UserAnalysisService` takes an `adapter` and an `user` ins
 > 💡 _Class with `@RuntimeProvided` parameters cannot be used as a dependency for another class_\
 > 💡 _Class with `@RuntimeProvided` parameters cannot be used as a singleton (for obvious reason)_
 
+### Tagged Dependencies
+  TO BE UPDATED
+
+### Profile Based Dependency Resolution
+  TO BE UPDATED
+
+### Contextual Dependency Resolver
+  TO BE UPDATED
+
 ## Type Substitutions
 SDF substitutes types in a more generalized way. For example, type `List<Integer>` can be provided to a dependency type `List<Number>` since `Integer` is a subtype of `Number` and `Integer` can be set to `Number`. Please see below few more examples of substitutions which SDF supports.
 | From Type                       | To Type                         | Assignable | Reason |
@@ -451,9 +458,9 @@ SDF substitutes types in a more generalized way. For example, type `List<Integer
   * `java.lang` classes cannot be declared as dependency (using `@Dependency` or `@DependencyProvider`). Use them as [Constants](#providing-constants) if needed.
   * If a constant is provided through JVM argument, then it must be prefixed with `sdf_consts.`. example: `-Dsdf_consts.env.name=DEV` - using this in JVM argument will add a constant value 'DEV' against id 'env.name'.
   * When using variable id in `@Bind`, it can only refer to constants of type `java.lang.String`.
-  * `DependencyResolver.setup()`(as described [here](#bootstrap-or-application-entrypoint-action)) must be called in bootstrap or application entry point to load the dependencies properly by the framework.
-  * If dependencies are provided using `@DependencyProvider`, then the class(es) containing the provider methods must be set to `DependencyResolver` using `setDependencyProviders()` method before invoking `setup()`.💡If no such provider methods exist, then no need to use `setDependencyProviders()` at all.
-  * If dependencies are set at class level using `@Dependency`, then base package(s) of the classes must be set to `DependencyResolver` using `setBasePackages()` method before invoking `setup()`.💡If dependencies are not set at class level, then no need to use `setBasePackages()` at all.
+  * `DependencyResolver` must be confiured in factory (default or contextual) before accessing resolver class from factory class
+  * If dependencies are provided using `@DependencyProvider`, then the class(es) containing the provider methods must be set to `DependencyResolverFactory` using `DependencyResolverConfig.builder().setDependencyProviders()` at the time of configuring for resolver class.💡If no such provider methods exist, then no need to use `setDependencyProviders()` at all.
+  * If dependencies are set at class level using `@Dependency`, then base package(s) of the classes must be set to `DependencyResolverFactory` using `DependencyResolverConfig.builder().setBasePackages()` at the time of configuring for resolver class.💡If dependencies are not set at class level, then no need to use `setBasePackages()` at all.
   * Naked type variables (in return type or in argument) is not allowed. TypeVariables must only be used either with `@Bind` or with `@RuntimeProvided`..
   * Only `List` and `Map` types are supported for Subtypes.
   * Class with `@RuntimeProvided` parameters cannot be used as a dependency for another class.
