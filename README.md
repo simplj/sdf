@@ -5,7 +5,7 @@
 * Lightweight
   > A single independent jar with no other dependency
 * Powerful
-  > Lets' get introduced to the framework to know it's capabilities
+  > Let's get introduced to the framework to know it's capabilities
 
 ## Maven Dependency
 [![Maven Central](https://img.shields.io/maven-central/v/com.simplj.di/sdf.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.simplj.di%22%20AND%20a:%22sdf%22)
