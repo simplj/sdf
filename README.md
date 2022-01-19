@@ -13,7 +13,7 @@
 <dependency>
     <groupId>com.simplj.di</groupId>
     <artifactId>sdf</artifactId>
-    <version>1.3</version>
+    <version>1.8</version>
 </dependency>
 ```
 [Mvn Repository](https://mvnrepository.com/artifact/com.simplj.di/sdf/latest)
@@ -413,13 +413,139 @@ In the above example, `UserAnalysisService` takes an `adapter` and an `user` ins
 > 💡 _Class with `@RuntimeProvided` parameters cannot be used as a singleton (for obvious reason)_
 
 ### Tagged Dependencies
-  TO BE UPDATED
+This feature helps in grouping dependencies logically with a name i.e. `tag`. To tag a dependency just put the tag name inside `@Dependency` or `@DependencyProvider`. It is possible to set multiple tags in a dependency. Let's consider below example:
+```java
+public interface TaggedService {
+    String name();
+}
+
+@Dependency(tags = {"tagA", "tagC"})
+public class TaggedServiceA implements TagService {
+    @Override
+    public String name() {
+        return "TaggedServiceA";
+    }
+}
+
+@Dependency(tags = {"tagB", "tagC"})
+public class TaggedServiceB implements TagService {
+    @Override
+    public String name() {
+        return "TaggedServiceB";
+    }
+}
+
+@Dependency(tags = "tagC", isDefault = true)
+public class TaggedServiceC implements TagService {
+    @Override
+    public String name() {
+        return "TaggedServiceC";
+    }
+}
+
+@Dependency
+public class Worker {
+    private final TagService tagService;
+
+    public Worker3(@Tag(name = "tagC") TagService tagService) {
+        this.tagService = tagService;
+    }
+}
+```
+
+In the above example, we have 3 implementations for `TaggedService` and `TaggedService3` is the default one. `Worker` class is dependent on `TaggedService` with tag name "tagC" (written as `@Tag(name = "tagC")`), since all 3 implementations of `TaggedService` have tag name "tagC", `TaggedServiceC` which is default, will be resolved and passed to `Worker`.
+
+To manually resolve a dependency with a specific tag name the overloaded `resolve()` needs to be used as mentioned below:
+```java
+DependencyResolver resolver = DependencyResolverFactory.defaultResolver();
+TaggedService tag = resolver.resolve(TaggedService.class, "tagA"); //Here TaggedServiceA will be resolved
+TaggedService tag = resolver.resolve(TaggedService.class, "tagB"); //Here TaggedServiceB will be resolved
+TaggedService tag = resolver.resolve(TaggedService.class, "tagC"); //Here TaggedServiceC will be resolved
+```
 
 ### Profile Based Dependency Resolution
-  TO BE UPDATED
+This feature helps loading different implementations for a type based on a profile. An example would be to load mocked implementations in case of test cases and actual implementations for actual flow. Like tagged dependencies, multiple profile names can also be set in a dependency.
+```java
+public class Record {
+  //Record class with some values and getter-setter methods
+  ...
+  ...
+  ...
+}
+
+public interface IPersister {
+  boolean persist(Record record);
+}
+
+@Dependency(profiles = "actual", isDefault = true)
+public class DbPersister implements IPersister {
+  public boolean persist(Record record) {
+    //Actual code to persist to db
+    ...
+    ...
+    ...
+  }
+}
+
+@Dependency(profiles = "test", isDefault = true)
+public class TestPersister implements IPersister {
+  public boolean persist(Record record) {
+    return true;
+  }
+}
+
+/****** Actual Flow Initialization ******/
+DependencyResolverFactory.configureResolver(context, DependencyResolverConfig.builder()
+    .setBasePackages(...).setDependencyProviders(...)
+    .setProfile("actual")
+    .build());
+
+/****** Test Flow Initialization ******/
+DependencyResolverFactory.configureResolver(context, DependencyResolverConfig.builder()
+    .setBasePackages(...).setDependencyProviders(...)
+    .setProfile("test")
+    .build());
+```
+
+In the above scenario, when initializing for actual flow, profile is passed as "actual" and on the other hand when initializing for test flow, profile is passed as "test". Hence, in actual flow `DbPersister` will be resolved and loaded for `IPersister` and for test flow, `TestPersister` will be resolved and loaded.
 
 ### Contextual Dependency Resolver
-  TO BE UPDATED
+This feature helps to configure multiple resolver if needed. That means let's we want to load a set of dependencies for a specific purpose and another set of dependencies for another purpose. It is possible to distinguish between these 2 set of dependencies using contextual dependnecy resolver feature of SDF.
+```java
+/****** classes under package "com.scenario.a" ******/
+@Dependency
+public class ClassA {
+  ...
+}
+@Dependency
+public class ClassAA {
+  ...
+}
+
+/****** classes under package "com.scenario.b" ******/
+@Dependency
+public class ClassB {
+  ...
+}
+@Dependency
+public class ClassBB {
+  ...
+}
+
+/****** Initialization ******/
+DependencyResolverFactory.configureResolver("a_context", DependencyResolverConfig.builder()
+      .setBasePackages("com.scenario.a")
+      .build());
+DependencyResolverFactory.configureResolver("b_context", DependencyResolverConfig.builder()
+      .setBasePackages("com.scenario.b")
+      .build());
+
+DependencyResolver resolverA = DependencyResolverFactory.resolver("a_context");
+DependencyResolver resolverB = DependencyResolverFactory.resolver("b_context");
+```
+In the above scenario,
+ classes under package "com.scenario.a" i.e. `ClassA` and `ClassAA` will be resolved and loaded by the resolver with context "a_context" i.e. `resolverA`
+ and, classes under package "com.scenario.b" i.e. `ClassB` and `ClassBB` will be resolved and loaded by the resolver with context "b_context" i.e. `resolverB`
 
 ## Type Substitutions
 SDF substitutes types in a more generalized way. For example, type `List<Integer>` can be provided to a dependency type `List<Number>` since `Integer` is a subtype of `Number` and `Integer` can be set to `Number`. Please see below few more examples of substitutions which SDF supports.
