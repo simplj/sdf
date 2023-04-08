@@ -1,4 +1,4 @@
-# [S]imple [D]ependency Injection [F]ramework
+# [S]imple [D]ependency Injection [F]ramework [![Maven Central](https://img.shields.io/maven-central/v/com.simplj.di/sdf.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.simplj.di%22%20AND%20a:%22sdf%22) [![javadoc](https://javadoc.io/badge2/com.simplj.di/sdf/javadoc.svg)](https://javadoc.io/doc/com.simplj.di/sdf)
 
 * Simple
   > As simple as adding one single annotation in a class
@@ -8,7 +8,6 @@
   > Let's get introduced to the framework to know it's capabilities
 
 ## Maven Dependency
-[![Maven Central](https://img.shields.io/maven-central/v/com.simplj.di/sdf.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.simplj.di%22%20AND%20a:%22sdf%22)
 ```
 <dependency>
     <groupId>com.simplj.di</groupId>
