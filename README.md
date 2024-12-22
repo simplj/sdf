@@ -507,6 +507,8 @@ DependencyResolverFactory.configureResolver(context, DependencyResolverConfig.bu
 
 In the above scenario, when initializing for actual flow, profile is passed as "actual" and on the other hand when initializing for test flow, profile is passed as "test". Hence, in actual flow `DbPersister` will be resolved and loaded for `IPersister` and for test flow, `TestPersister` will be resolved and loaded.
 
+Profile can also be passed from JVM argument like `sdf.<context>.profile=<profile>` where <context> is the context name for which the <profile> will be set. For example, to pass a profile name "dev" to default context, `sdf.default.profile=dev` needs to be passed from JVM argument.
+
 ### Contextual Dependency Resolver
 This feature helps to configure multiple resolver if needed. That means let's we want to load a set of dependencies for a specific purpose and another set of dependencies for another purpose. It is possible to distinguish between these 2 set of dependencies using contextual dependnecy resolver feature of SDF.
 ```java
