@@ -451,7 +451,7 @@ public class Worker {
 }
 ```
 
-In the above example, we have 3 implementations for `TaggedService` and `TaggedService3` is the default one. `Worker` class is dependent on `TaggedService` with tag name "tagC" (written as `@Tag(name = "tagC")`), since all 3 implementations of `TaggedService` have tag name "tagC", `TaggedServiceC` which is default, will be resolved and passed to `Worker`.
+In the above example, we have 3 implementations for `TaggedService` and `TaggedService3` is the default one. `Worker` class is dependent on `TaggedService` with tag name "tagC" (written as `@Tag(name = "tagC")`), since `TaggedService3` have tag name "tagC", it will be resolved and passed to `Worker`.
 
 To manually resolve a dependency with a specific tag name the overloaded `resolve()` needs to be used as mentioned below:
 ```java
