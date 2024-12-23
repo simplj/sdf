@@ -17,6 +17,8 @@
 ```
 [Mvn Repository](https://mvnrepository.com/artifact/com.simplj.di/sdf/latest)
 
+[![Video Series](https://img.youtube.com/vi/Y0-Es4A7FK8/0.jpg)](https://youtube.com/playlist?list=PLlmKjzN-qBWnpZJk38LIyBAQRyYTl1iee&si=MV0dQ_8QVq4uoBJn)
+
 Table of contents
 =================
 <!--ts-->
