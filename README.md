@@ -550,7 +550,7 @@ In the above scenario,
 
 ## Type Substitutions
 SDF substitutes types in a more generalized way. For example, type `List<Integer>` can be provided to a dependency type `List<Number>` since `Integer` is a subtype of `Number` and `Integer` can be set to `Number`. Please see below few more examples of substitutions which SDF supports.
-| From Type                       | To Type                         | Assignable | Reason |
+| From Type                     | To Type                       | Assignable | Reason |
 | ----------------------------- | ----------------------------- | ---------- | ------ |
 | Map<String,? extends Integer> | Map<String,? extends Integer> |     ✅     |        |
 | Map<String,? extends Integer> | Map<String,Integer>           |     ✅     |        |
