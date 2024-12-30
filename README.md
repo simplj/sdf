@@ -17,8 +17,7 @@
 ```
 [Mvn Repository](https://mvnrepository.com/artifact/com.simplj.di/sdf/latest)
 
-Video Series on YouTube about SDF
-=================================
+## Video Series on YouTube about SDF
 [![Video Series](https://img.youtube.com/vi/KsdxLmG0WVg/0.jpg)](https://youtube.com/playlist?list=PLlmKjzN-qBWnpZJk38LIyBAQRyYTl1iee&si=MV0dQ_8QVq4uoBJn)
 
 Table of contents
