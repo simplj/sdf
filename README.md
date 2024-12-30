@@ -19,7 +19,7 @@
 
 [![Video Series](https://img.youtube.com/vi/Y0-Es4A7FK8/0.jpg)](https://youtube.com/playlist?list=PLlmKjzN-qBWnpZJk38LIyBAQRyYTl1iee&si=MV0dQ_8QVq4uoBJn)
 
-<a href="https://youtube.com/playlist?list=PLlmKjzN-qBWnpZJk38LIyBAQRyYTl1iee&si=MV0dQ_8QVq4uoBJn" target="_blank"><img src="http://img.youtube.com/vi/Y0-Es4A7FK8/0.jpg" alt="Youtube video series about SDF" width="240" height="180" border="10" /></a>
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=MV0dQ_8QVq4uoBJn" target="_blank"><img src="http://img.youtube.com/vi/Y0-Es4A7FK8/0.jpg" alt="Youtube video series about SDF" width="240" height="180" border="10" /></a>
 
 Table of contents
 =================
