@@ -17,10 +17,11 @@
 ```
 [Mvn Repository](https://mvnrepository.com/artifact/com.simplj.di/sdf/latest)
 
+Video Series on YouTube about SDF
+=================================
 [![Video Series](https://img.youtube.com/vi/KsdxLmG0WVg/0.jpg)](https://youtube.com/playlist?list=PLlmKjzN-qBWnpZJk38LIyBAQRyYTl1iee&si=MV0dQ_8QVq4uoBJn)
 
-<img src="http://img.youtube.com/vi/KsdxLmG0WVg/0.jpg" alt="Youtube video series about SDF" width="240" height="180" border="10" />
-![Youtube video series about SDF](http://img.youtube.com/vi/KsdxLmG0WVg/0.jpg)
+<a href="http://www.youtube.com/watch?feature=player_embedded&list=PLlmKjzN-qBWnpZJk38LIyBAQRyYTl1iee" target="_blank"><img src="http://img.youtube.com/vi/YKsdxLmG0WVg/0.jpg" alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
 
 Table of contents
 =================
