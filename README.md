@@ -7,18 +7,18 @@
 * Powerful
   > Let's get introduced to the framework to know it's capabilities
 
+## Video Series on YouTube about SDF
+[![Video Series](https://img.youtube.com/vi/KsdxLmG0WVg/0.jpg)](https://youtube.com/playlist?list=PLlmKjzN-qBWnpZJk38LIyBAQRyYTl1iee&si=MV0dQ_8QVq4uoBJn)
+
 ## Maven Dependency
 ```
 <dependency>
     <groupId>com.simplj.di</groupId>
     <artifactId>sdf</artifactId>
-    <version>2.0.2</version>
+    <version>2.1</version>
 </dependency>
 ```
 [Mvn Repository](https://mvnrepository.com/artifact/com.simplj.di/sdf/latest)
-
-## Video Series on YouTube about SDF
-[![Video Series](https://img.youtube.com/vi/KsdxLmG0WVg/0.jpg)](https://youtube.com/playlist?list=PLlmKjzN-qBWnpZJk38LIyBAQRyYTl1iee&si=MV0dQ_8QVq4uoBJn)
 
 Table of contents
 =================
