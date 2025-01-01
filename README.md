@@ -8,7 +8,7 @@
   > Let's get introduced to the framework to know it's capabilities
 
 ## Video Series on YouTube about SDF
-[![Video Series](https://img.youtube.com/vi/KsdxLmG0WVg/0.jpg)](https://youtube.com/playlist?list=PLlmKjzN-qBWnpZJk38LIyBAQRyYTl1iee&si=MV0dQ_8QVq4uoBJn)
+[![Video Series](https://img.youtube.com/vi/KsdxLmG0WVg/0.jpg)](https://www.youtube.com/playlist?list=PLlmKjzN-qBWnpZJk38LIyBAQRyYTl1iee)
 
 ## Maven Dependency
 ```
@@ -51,7 +51,7 @@ Table of contents
    * [Previous Versions](#previous-versions)
 <!--te-->
 
-## Usage
+## Features
 
 ### Instantiating a class as Dependency using `@Dependency`
 ##### Through constructor
@@ -550,6 +550,9 @@ DependencyResolver resolverB = DependencyResolverFactory.resolver("b_context");
 In the above scenario,
  classes under package "com.scenario.a" i.e. `ClassA` and `ClassAA` will be resolved and loaded by the resolver with context "a_context" i.e. `resolverA`
  and, classes under package "com.scenario.b" i.e. `ClassB` and `ClassBB` will be resolved and loaded by the resolver with context "b_context" i.e. `resolverB`
+
+### Dynamically invoking a method by resolving all of it's @Implicit dependencies
+TO BE UPDATED SOON ...
 
 ## Type Substitutions
 SDF substitutes types in a more generalized way. For example, type `List<Integer>` can be provided to a dependency type `List<Number>` since `Integer` is a subtype of `Number` and `Integer` can be set to `Number`. Please see below few more examples of substitutions which SDF supports.
