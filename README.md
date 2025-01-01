@@ -23,7 +23,7 @@
 Table of contents
 =================
 <!--ts-->
-   * [Usage](#usage)
+   * [Features](#features)
       * [Instantiating a class as Dependency using `@Dependency`](#instantiating-a-class-as-dependency-using-dependency)
          * [Through constructor](through-constructor)
          * [Through factory method](#through-factory-method)
@@ -43,6 +43,7 @@ Table of contents
       * [Tagged Dependencies](#tagged-dependencies)
       * [Profile Based Dependency Resolution](#profile-based-dependency-resolution)
       * [Contextual Dependency Resolver](#contextual-dependency-resolver)
+      * [Dynamically invoking a method by resolving all of it's @Implicit dependencies](#dynamically-invoking-a-method-by-resolving-all-of-its-implicit-dependencies)
    * [Type Substitutions](#type-substitutions)
    * [Constraints/Restrictions](#constraintsrestrictions)
    * [Suggestions/Feedback](https://github.com/simplj/sdf/discussions)
