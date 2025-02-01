@@ -15,7 +15,7 @@
 <dependency>
     <groupId>com.simplj.di</groupId>
     <artifactId>sdf</artifactId>
-    <version>2.1</version>
+    <version>2.3</version>
 </dependency>
 ```
 [Mvn Repository](https://mvnrepository.com/artifact/com.simplj.di/sdf/latest)
